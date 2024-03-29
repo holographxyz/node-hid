@@ -1,7 +1,7 @@
 {
   "name": "node-hid",
   "description": "USB HID device access library",
-  "version": "3.0.0",
+  "version": "2.2.0",
   "author": "Hans Hübner <hans.huebner@gmail.com> (https://github.com/hanshuebner)",
   "bugs": "https://github.com/node-hid/node-hid/issues",
   "homepage": "https://github.com/node-hid/node-hid#readme",
@@ -18,9 +18,14 @@
     "test": "node src/test-ci.js",
     "showdevices": "node src/show-devices.js",
     "prepublishOnly": "git submodule update --init",
-    "install": "pkg-prebuilds-verify ./binding-options.js || node-gyp rebuild",
-    "build": "node-gyp build",
-    "rebuild": "node-gyp clean configure build",
+    "install": "prebuild-install --runtime napi || node-gyp rebuild",
+    "prebuild": "prebuild --runtime napi --all --verbose --include-regex \"HID.*node$\"",
+    "prebuild-upload": "prebuild --runtime napi --upload-all",
+    "prebuild-ci": "prebuild-ci",
+    "gypclean": "node-gyp clean",
+    "gypconfigure": "node-gyp configure",
+    "gypbuild": "node-gyp build",
+    "gyprebuild": "node-gyp rebuild",
     "clean": "rimraf build node_modules prebuilds package-lock.json",
     "distclean": "npm run clean && rimraf hidapi"
   },
@@ -28,34 +33,23 @@
     "hid-showdevices": "./src/show-devices.js"
   },
   "main": "./nodehid.js",
-  "types": "./nodehid.d.ts",
   "binary": {
     "napi_versions": [
-      4
+      3
     ]
   },
   "engines": {
-    "node": ">=10.16"
+    "node": ">=10"
   },
   "license": "(MIT OR X11)",
   "dependencies": {
-    "node-addon-api": "^3.2.1",
-    "pkg-prebuilds": "^0.2.1"
+    "bindings": "^1.5.0",
+    "node-addon-api": "^3.0.2",
+    "prebuild-install": "^7.1.1"
   },
   "devDependencies": {
+    "prebuild": "^12.1.0",
     "rimraf": "^2.6.2"
   },
-  "gypfile": true,
-  "files": [
-    "nodehid.js",
-    "nodehid.d.ts",
-    "binding-options.js",
-    "hidapi",
-    "prebuilds",
-    "src/*.cc",
-    "src/*.h",
-    "LICENSE*",
-    "README.md",
-    "binding.gyp"
-  ]
+  "gypfile": true
 }
